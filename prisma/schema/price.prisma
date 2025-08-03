@@ -1,0 +1,49 @@
+model ProductPrice {
+  id                         String                               @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                  DateTime                             @default(now())
+  updatedAt                  DateTime                             @updatedAt
+  internalName               String
+  name                       String
+  type                       ProductPriceType                     @default(ONE_TIME)
+  priceWithoutTax            Float
+  priceWithTax               Float
+  currency                   String                               @default("DKK")
+  membershipClub             MembershipClub?                      @relation(fields: [membershipClubId], references: [id])
+  membershipClubId           String?                              @db.ObjectId
+  product                    Course?                              @relation(fields: [productId], references: [id])
+  productId                  String?                              @db.ObjectId
+  isActive                   Boolean                              @default(true)
+  subscriptions              Subscription[]
+  installments               Int?
+  installmentPriceWithoutTax Float?
+  installmentPriceWithTax    Float?
+  installmentInterval        Int?
+  installmentIntervalUnit    ProductPriceInstallmentIntervalUnit?
+  payments                   Payment[]
+  reference                  String
+  subscriptionTrialDays      Int?
+  order                      Int?
+  couponCode                 String?
+  accessType                 ProductPriceAccessType               @default(PUBLIC)
+
+  @@map("product-prices")
+}
+
+enum ProductPriceAccessType {
+  PUBLIC
+  SECRET
+  COUPON
+}
+
+enum ProductPriceInstallmentIntervalUnit {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+enum ProductPriceType {
+  ONE_TIME
+  SUBSCRIPTION
+  FREE
+}

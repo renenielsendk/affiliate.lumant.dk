@@ -1,0 +1,22 @@
+model Theme {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  fontFamily      String
+  primaryColor    String
+  buttonColor     String
+  buttonTextColor String
+  instructor      Instructor?
+  logoMedia       Media?            @relation("ThemeLogo", fields: [logoMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  logoMediaId     String?           @db.ObjectId
+  faviconMedia    Media?            @relation("ThemeFavicon", fields: [faviconMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  faviconMediaId  String?           @db.ObjectId
+  footerLinks     ThemeFooterLink[]
+
+  @@map("themes")
+}
+
+type ThemeFooterLink {
+  label String
+  url   String
+}

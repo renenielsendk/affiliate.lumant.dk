@@ -1,0 +1,45 @@
+model Notifications_OrderConfirmation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orderId   String   @db.ObjectId
+  handled   Boolean
+  tries     Int      @default(0)
+
+  @@map("notifications-order-confirmation")
+}
+
+model Notifications_NewEnrollment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orderId   String   @db.ObjectId
+  handled   Boolean
+  tries     Int      @default(0)
+
+  @@map("notifications-new-enrollment")
+}
+
+model Notifications_Instructor_NewEnrollment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  paymentId String   @db.ObjectId
+  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  handled   Boolean  @default(false)
+  tries     Int      @default(0)
+
+  @@map("notifications-instructor-new-enrollment")
+}
+
+model Notifications_User_PaymentConfirmation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  paymentId String   @db.ObjectId
+  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  handled   Boolean  @default(false)
+  tries     Int      @default(0)
+
+  @@map("notifications-user-payment-confirmation")
+}

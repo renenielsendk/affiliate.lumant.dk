@@ -1,0 +1,46 @@
+model SaasAffiliate {
+  id           String                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  referralCode String                  @unique
+  users        User[]
+  referrals    SaasAffiliateReferral[]
+
+  @@map("saas-affiliates")
+}
+
+model SaasAffiliateReferral {
+  id             String                              @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime                            @default(now())
+  updatedAt      DateTime                            @updatedAt
+  convertedAt    DateTime                            @updatedAt
+  instructorId   String                              @unique @db.ObjectId
+  instructor     Instructor                          @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  affiliateId    String                              @unique @db.ObjectId
+  affiliate      SaasAffiliate                       @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status         SaasAffiliateReferralStatus         @default(INVITED)
+  conversionType SaasAffiliateReferralConversionType @default(MONTHLY_SUBSCRIPTION)
+
+  @@map("saas-affiliate-referrals")
+}
+
+enum SaasAffiliateReferralConversionType {
+  MONTHLY_SUBSCRIPTION
+  YEARLY_SUBSCRIPTION
+}
+
+enum SaasAffiliateReferralStatus {
+  INVITED
+  TRIALING
+  CONVERTED
+}
+
+model SaasAffiliateTransaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  amount    Int      @default(0)
+  text      String
+
+  @@map("saas-affiliate-transactions")
+}

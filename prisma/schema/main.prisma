@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+type SignupOrigin {
+  campaign String?
+  source   String?
+  medium   String?
+}
+
+type CheckoutCustomField {
+  label String
+  type  String
+  id    String
+  order Int
+}
+
+type CheckoutSettings {
+  leftTopText      String?
+  leftBottomText   String?
+  rightTopText     String?
+  buttonText       String?
+  newsletterText   String?
+  thankYouPageText String?
+}
+
+type ReceiptSettings {
+  emailBody        String?
+  emailSubject     String?
+  thankYouPageText String?
+}

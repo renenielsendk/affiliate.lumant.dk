@@ -1,0 +1,6 @@
+@import 'simplebar-react/dist/simplebar.min.css';
+
+html,
+body {
+  scroll-behavior: smooth !important;
+}

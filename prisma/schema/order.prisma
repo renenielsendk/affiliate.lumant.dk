@@ -1,0 +1,101 @@
+model Order {
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  user             User               @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId           String             @db.ObjectId
+  reference        String
+  netAmount        Float
+  vatAmount        Float
+  grossAmount      Float
+  discountAmount   Float?
+  quantity         Int
+  vatPercentage    Int
+  currency         String
+  status           OrderStatusType
+  events           OrderEvent[]
+  transactions     Transaction[]
+  course           Course             @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  courseId         String             @db.ObjectId
+  text             String
+  courseEnrollment CourseEnrollment?
+  origin           OrderOriginType?
+  invoiceUrl       String?
+  posted           Boolean
+  discountCode     DiscountCode?      @relation(fields: [discountCodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  discountCodeId   String?            @db.ObjectId
+  payment          PaymentData?
+  customFields     OrderCustomField[]
+
+  @@map("orders")
+}
+
+enum OrderStatusType {
+  Completed
+  Draft
+}
+
+type OrderCustomField {
+  label String
+  value String
+  type  String
+}
+
+type PaymentData {
+  link          String?
+  callbackEvent Json?
+}
+
+type OrderOriginType {
+  campaign     String?
+  source       String?
+  medium       String?
+  referralCode String?
+}
+
+model Transaction {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  type         String
+  netAmount    Float
+  grossAmount  Float
+  instructor   Instructor @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  instructorId String     @db.ObjectId
+  order        Order?     @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderId      String?    @db.ObjectId
+
+  @@map("transactions")
+}
+
+model TransactionHistory {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime @default(now())
+  netAmount        Float
+  grossAmount      Float
+  vatAmount        Float
+  paymentReference String?
+
+  @@map("transaction-history")
+}
+
+model OrderEvent {
+  id                          String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                   DateTime       @default(now())
+  updatedAt                   DateTime       @updatedAt
+  type                        OrderEventType
+  order                       Order          @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderId                     String         @db.ObjectId
+  studentsEnrolled            Boolean?
+  enrollmentNotificationsSent Boolean?
+  transactionsCreated         Boolean?
+  orderConfirmationSent       Boolean?
+  kycInquiriesSent            Boolean?
+
+  @@map("order-events")
+}
+
+enum OrderEventType {
+  FreeEnrollment
+  NewOrder
+}

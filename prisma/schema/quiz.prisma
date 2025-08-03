@@ -1,0 +1,68 @@
+model Quiz {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  title           String
+  internalName    String
+  questions       QuizQuestion[]
+  responses       QuizResponse[]
+  instructorId    String          @db.ObjectId
+  instructor      Instructor      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  productLections CourseLection[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  type      QuestionType
+  quizId    String       @db.ObjectId
+  title     String
+  question  String
+  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options   Json
+  answers   QuizAnswer[]
+  order     Int?
+
+  @@map("quiz-questions")
+}
+
+model QuizResponse {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  userId    String       @db.ObjectId
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId    String       @db.ObjectId
+  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers   QuizAnswer[]
+
+  @@map("quiz-responses")
+}
+
+model QuizAnswer {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  questionId String       @db.ObjectId
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  responseId String       @db.ObjectId
+  response   QuizResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  // Answer Fields: Dynamically store user responses based on question type
+  optionId   String? @db.ObjectId // Selected option for multiple-choice
+  textAnswer String? // Text-based answer
+  rating     Int? // Rating-based answer (e.g., 1-5)
+
+  @@map("quiz-answers")
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TEXT
+  RATING
+  BOOLEAN
+  OTHER
+}

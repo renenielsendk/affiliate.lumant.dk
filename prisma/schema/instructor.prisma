@@ -1,0 +1,113 @@
+model Instructor {
+  // Required
+  id                   String                         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt            DateTime                       @default(now())
+  updatedAt            DateTime                       @updatedAt
+  slug                 String                         @unique
+  name                 String
+  // Optional
+  headline             String?
+  facebookHandle       String?
+  instagramHandle      String?
+  linkedinHandle       String?
+  tiktokHandle         String?
+  youtubeHandle        String?
+  patreonHandle        String?
+  trackingSettings     InstructorTrackingSettings?
+  profileImageMedia    Media?                         @relation("InstructorProfileImage", fields: [profileImageMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  profileImageMediaId  String?                        @db.ObjectId
+  profileVideoMedia    Media?                         @relation("InstructorProfileVideo", fields: [profileVideoMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  profileVideoMediaId  String?                        @db.ObjectId
+  notificationSettings InstructorNotificationSettings
+  origin               SignupOrigin?
+  isDeleted            Boolean?
+  stripeSettings       InstructorStripeSettings?
+  theme                Theme?                         @relation(fields: [themeId], references: [id])
+  themeId              String?                        @unique @db.ObjectId
+  socialMediaLinks     SocialMediaLink?
+  onboardingProgress   OnboardingProgress?
+  crmProfileLink       String?
+  emailSettings        EmailSettings?
+  affiliateReferral    SaasAffiliateReferral?
+
+  // Relations
+  paymentLinks               PaymentLink[]
+  contacts                   Contact[]
+  enrollments                CourseEnrollment[]
+  businessInfo               BusinessInfo
+  webhooks                   Webhook[]
+  membershipClubs            MembershipClub[]
+  dispatchedContactEmails    ContactEmails[]
+  membershipClubEnrollments  MembershipClubEnrollment[]
+  payments                   Payment[]
+  subscriptions              Subscription[]
+  contactLists               ContactList[]
+  quizzes                    Quiz[]
+  automations                Automation[]
+  dispatchedEmails           Email[]
+  products                   ProductEnrollment[]
+  landingPages               LandingPage[]
+  landingPagesV2             LandingPageV2[]
+  broadcasts                 Broadcast[]
+  discountCodes              DiscountCode[]
+  users                      User[]
+  transactions               Transaction[]
+  media                      Media[]                     @relation("InstructorMedia")
+  courses                    Course[]
+  membershipClubPosts        MembershipClubPost[]
+  membershipClubPostComments MembershipClubPostComment[]
+
+  @@map("instructors")
+}
+
+type EmailSettings {
+  enableDoubleOptIn Boolean @default(false)
+}
+
+type InstructorTrackingSettings {
+  facebookPixelTrackingId String?
+}
+
+type OnboardingProgress {
+  courseCreated      Boolean?
+  profileConfigured  Boolean?
+  brandingConfigured Boolean?
+  marketLinkCreated  Boolean?
+}
+
+type SocialMediaLink {
+  type String
+  url  String
+}
+
+type BusinessInfo {
+  websiteUrl                   String?
+  name                         String
+  address                      String?
+  tagline                      String?
+  contactEmail                 String
+  contactPhone                 String?
+  city                         String?
+  zip                          String?
+  country                      String  @default("Danmark")
+  description                  String?
+  businessIdentificationNumber String?
+  termsAndConditions           String?
+  termsAndConditionsUrl        String?
+}
+
+type InstructorStripeSettings {
+  connectAccountId String?
+  connectStatus    InstructorStripeSettingsStatus?
+  subscriptionId   String?
+  billingPlanId    String?
+}
+
+enum InstructorStripeSettingsStatus {
+  pending
+  verified
+}
+
+type InstructorNotificationSettings {
+  newOrderEmail Boolean
+}
