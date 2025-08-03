@@ -8,7 +8,7 @@
     "build": "next build",
     "validate": "npx tsc --noEmit",
     "prettier": "npx prettier --write src/",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate --schema ./prisma"
   },
   "dependencies": {
     "@clerk/localizations": "^3.8.0",

@@ -2,10 +2,12 @@ model Theme {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  fontFamily      String
-  primaryColor    String
-  buttonColor     String
-  buttonTextColor String
+  fontFamily      String            @default("DM_Sans")
+  primaryColor    String            @default("#14b475")
+  buttonColor     String            @default("#14b475")
+  buttonTextColor String            @default("#ffffff")
+  menuColor       String            @default("#14b475")
+  menuTextColor   String            @default("#ffffff")
   instructor      Instructor?
   logoMedia       Media?            @relation("ThemeLogo", fields: [logoMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   logoMediaId     String?           @db.ObjectId

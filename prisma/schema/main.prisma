@@ -24,12 +24,13 @@ type CheckoutCustomField {
 }
 
 type CheckoutSettings {
-  leftTopText      String?
-  leftBottomText   String?
-  rightTopText     String?
-  buttonText       String?
-  newsletterText   String?
-  thankYouPageText String?
+  leftTopText         String?
+  leftBottomText      String?
+  rightTopText        String?
+  buttonText          String?
+  newsletterText      String?
+  thankYouPageText    String?
+  showPriceWithoutTax Boolean?
 }
 
 type ReceiptSettings {

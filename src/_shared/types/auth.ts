@@ -2,5 +2,8 @@ export type AuthUser = {
   id: string;
   firstName?: string | null;
   email: string;
-  affiliateId: string;
+  affiliate: {
+    id: string;
+    referralCode: string;
+  };
 };

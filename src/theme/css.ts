@@ -7,16 +7,10 @@ import { autocompleteClasses } from '@mui/material/Autocomplete';
 // ----------------------------------------------------------------------
 
 function getRadius(value: string | number, multiplier: number) {
-  return typeof value === 'number'
-    ? value * multiplier
-    : `calc(${value} * ${multiplier})`;
+  return typeof value === 'number' ? value * multiplier : `calc(${value} * ${multiplier})`;
 }
 
-export const paper = ({
-  theme,
-  bgcolor,
-  dropdown,
-}: { theme: Theme; bgcolor?: string; dropdown?: boolean }) => ({
+export const paper = ({ theme, bgcolor, dropdown }: { theme: Theme; bgcolor?: string; dropdown?: boolean }) => ({
   ...bgBlur({
     blur: 20,
     opacity: 0.9,

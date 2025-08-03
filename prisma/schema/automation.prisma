@@ -58,6 +58,7 @@ enum AutomationStepType {
 }
 
 model AutomationSubscription {
+  // Required
   id            String                       @id @default(auto()) @map("_id") @db.ObjectId
   createdAt     DateTime                     @default(now())
   updatedAt     DateTime                     @updatedAt
@@ -65,10 +66,13 @@ model AutomationSubscription {
   contactId     String                       @db.ObjectId
   automation    Automation                   @relation(fields: [automationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   automationId  String                       @db.ObjectId
-  progress      AutomationProgress[]
   status        AutomationSubscriptionStatus @default(PENDING)
+  // Optional
   currentStep   AutomationStep?              @relation(fields: [currentStepId], references: [id])
   currentStepId String?                      @db.ObjectId
+  nextStepAt    DateTime?
+  // Relations
+  progress      AutomationProgress[]
 
   @@map("automation-subscriptions")
 }
@@ -90,6 +94,8 @@ model AutomationProgress {
   stepId         String                           @db.ObjectId
   completedAt    DateTime?
   completionType AutomationProgressCompletionType @default(IN_PROGRESS)
+  emailId        String?                          @db.ObjectId
+  email          Email?                           @relation(fields: [emailId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("automation-progress")
 }

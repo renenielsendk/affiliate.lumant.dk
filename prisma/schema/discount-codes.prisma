@@ -8,7 +8,6 @@ model DiscountCode {
   amount       Int
   type         DiscountCodeType
   courseIds    String[]         @db.ObjectId
-  orders       Order[]
   instructor   Instructor       @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   instructorId String           @db.ObjectId
 

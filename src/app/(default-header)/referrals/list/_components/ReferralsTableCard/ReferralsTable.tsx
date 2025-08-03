@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  TableBody,
-  Box,
-  TablePagination,
-  Card,
-  TableRow,
-  TableCell,
-  Typography,
-  Stack,
-} from '@mui/material';
+import { TableBody, Box, TablePagination, Card, TableRow, TableCell, Typography, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import { ReferralListItem } from './types';
 import { useTable } from '@/components/table/use-table';
@@ -19,10 +10,10 @@ import { Label } from '@/components/Label';
 import { SaasAffiliateReferralConversionType, SaasAffiliateReferralStatus } from '@prisma/client';
 
 const TABLE_HEAD = [
-  { id: 'createdAt', label: 'Oprettet', align: 'left' },
+  { id: 'createdAt', label: 'Tilmeldt', align: 'left' },
   { id: 'name', label: 'Navn', align: 'left' },
-  { id: 'type', label: 'Type', align: 'left' },
-  { id: 'status', label: 'Status', align: 'center' },
+  { id: 'subscription', label: 'Produkt', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
 ];
 
 type Props = {
@@ -38,45 +29,51 @@ export const ReferralsTable = ({ referrals }: Props) => {
         <TableContainerCustom>
           <TableHeadCustom headLabel={TABLE_HEAD} />
           <TableBody>
-            {referrals
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((referral, index) => (
-                <TableRow key={index}>
-                  <TableCell align='left'>
-                    <Typography color='white' variant='body2' fontWeight={700}>
-                      {dayjs(referral.createdAt).format('MMM DD, YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell
-                    align='left'
+            {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((referral, index) => (
+              <TableRow key={index}>
+                <TableCell align='left'>
+                  <Typography color='white' variant='body2' fontWeight={700}>
+                    {dayjs(referral.createdAt).format('MMM DD, YYYY')}
+                  </Typography>
+                </TableCell>
+                <TableCell align='left'>
+                  <Typography color='white' variant='body2' fontWeight={700}>
+                    {referral.name}
+                  </Typography>
+                </TableCell>
+                <TableCell align='left'>
+                  <Label variant='outlined' sx={{ textTransform: 'capitalize' }}>
+                    {referral.conversionType === SaasAffiliateReferralConversionType.YEARLY_SUBSCRIPTION &&
+                      'Købt årligt'}
+                    {referral.conversionType === SaasAffiliateReferralConversionType.MONTHLY_SUBSCRIPTION &&
+                      'Købt månedligt'}
+                    {referral.conversionType === SaasAffiliateReferralConversionType.NOT_CONVERTED &&
+                      'Ikke konverteret'}
+                  </Label>
+                </TableCell>
+                <TableCell align='left'>
+                  <Label
+                    variant='ghost'
+                    color={referral.status === SaasAffiliateReferralStatus.CONVERTED ? 'success' : 'warning'}
+                    sx={{ textTransform: 'capitalize' }}
                   >
-                    <Typography color='white' variant='body2' fontWeight={700}>
-                      {referral.name}
+                    {referral.status === SaasAffiliateReferralStatus.INVITED && 'Inviteret'}
+                    {referral.status === SaasAffiliateReferralStatus.TRIALING && 'Prøveperiode'}
+                    {referral.status === SaasAffiliateReferralStatus.CONVERTED && 'Konverteret'}
+                  </Label>
+                  {referral.status === SaasAffiliateReferralStatus.TRIALING && referral.trialExpiresAt && (
+                    <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
+                      Udløber om {dayjs(referral.trialExpiresAt).diff(dayjs(), 'day')} dage
                     </Typography>
-                  </TableCell>
-                  <TableCell align='left'>
-                    <Label
-                      variant='outlined'
-                      sx={{ textTransform: 'capitalize' }}
-                    >
-                      {referral.conversionType === SaasAffiliateReferralConversionType.YEARLY_SUBSCRIPTION && 'Årligt abonnement'}
-                      {referral.conversionType === SaasAffiliateReferralConversionType.MONTHLY_SUBSCRIPTION && 'Månedligt abonnement'}
-                    </Label>
-                  </TableCell>
-                  <TableCell align='center'>
-                    <Label
-                      variant='ghost'
-                      color={referral.status === SaasAffiliateReferralStatus.CONVERTED ? 'success' : 'warning'}
-                      sx={{ textTransform: 'capitalize' }}
-                    >
-                      {referral.status === SaasAffiliateReferralStatus.INVITED && 'Inviteret'}
-                      {referral.status === SaasAffiliateReferralStatus.TRIALING && 'Prøveperiode'}
-                      {referral.status === SaasAffiliateReferralStatus.CONVERTED && 'Konverteret'}
-                    </Label>
-                  </TableCell>
-
-                </TableRow>
-              ))}
+                  )}
+                  {referral.status === SaasAffiliateReferralStatus.CONVERTED && (
+                    <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
+                      {dayjs(referral.convertedAt).format('MMM DD, YYYY')}
+                    </Typography>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </TableContainerCustom>
         <Box sx={{ position: 'relative' }}>

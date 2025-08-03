@@ -1,30 +1,46 @@
 model SaasAffiliate {
-  id           String                  @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-  referralCode String                  @unique
-  users        User[]
-  referrals    SaasAffiliateReferral[]
+  id             String                      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime                    @default(now())
+  updatedAt      DateTime                    @updatedAt
+  referralCode   String                      @unique
+  users          User[]
+  referrals      SaasAffiliateReferral[]
+  businessInfo   SaasAffiliateBusinessInfo
+  agreementTerms SaasAffiliateAgreementTerms
 
   @@map("saas-affiliates")
+}
+
+type SaasAffiliateAgreementTerms {
+  monthlyReferralAmount Int
+  yearlyReferralAmount  Int
+  trialPeriodDays       Int
+}
+
+type SaasAffiliateBusinessInfo {
+  name         String
+  contactEmail String
+  contactPhone String
 }
 
 model SaasAffiliateReferral {
   id             String                              @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime                            @default(now())
   updatedAt      DateTime                            @updatedAt
-  convertedAt    DateTime                            @updatedAt
+  convertedAt    DateTime?                           @updatedAt
+  trialExpiresAt DateTime?                           @updatedAt
   instructorId   String                              @unique @db.ObjectId
   instructor     Instructor                          @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   affiliateId    String                              @unique @db.ObjectId
   affiliate      SaasAffiliate                       @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  status         SaasAffiliateReferralStatus         @default(INVITED)
-  conversionType SaasAffiliateReferralConversionType @default(MONTHLY_SUBSCRIPTION)
+  status         SaasAffiliateReferralStatus         @default(TRIALING)
+  conversionType SaasAffiliateReferralConversionType @default(NOT_CONVERTED)
 
   @@map("saas-affiliate-referrals")
 }
 
 enum SaasAffiliateReferralConversionType {
+  NOT_CONVERTED
   MONTHLY_SUBSCRIPTION
   YEARLY_SUBSCRIPTION
 }

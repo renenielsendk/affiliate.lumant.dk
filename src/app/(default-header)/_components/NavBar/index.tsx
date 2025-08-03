@@ -16,8 +16,13 @@ export const NAV = {
 
 const navLinks = [
   {
-    subheader: 'Affiliate',
+    subheader: 'Kontrolpanel',
     items: [
+      {
+        title: 'Hjem',
+        path: '/home',
+        icon: 'mdi:monitor-dashboard',
+      },
       {
         title: 'Henvisninger',
         path: '/referrals/list',

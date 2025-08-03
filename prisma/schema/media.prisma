@@ -6,6 +6,7 @@ model Media {
   contentType                String
   fileName                   String
   size                       Int
+  name                       String?
   duration                   Int?
   cdnMediaId                 String?
   cdnMediaStatus             String?
@@ -21,6 +22,8 @@ model Media {
   themeFavicons              Theme[]                     @relation("ThemeFavicon")
   membershipClubContentPages MembershipClubContentPage[] @relation("MembershipClubContentPageBannerMedia")
   membershipClubBanners      MembershipClub[]            @relation("MembershipClubBannerMedia")
+  reviewVideos               Review[]                    @relation("ReviewVideo")
+  reviewImages               Review[]                    @relation("ReviewImage")
 
   @@map("media")
 }

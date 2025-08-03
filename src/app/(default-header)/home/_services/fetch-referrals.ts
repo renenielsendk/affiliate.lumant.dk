@@ -1,7 +1,7 @@
 import { createChildLogger } from '@/libs/logger';
 import { PrismaClient } from '@prisma/client';
 import { validateAuth } from '@/libs/auth';
-import { ReferralListItem } from './types';
+import { ReferralListItem } from '../_types/referral';
 
 const dbClient = new PrismaClient();
 

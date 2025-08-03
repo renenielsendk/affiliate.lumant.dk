@@ -1,35 +1,36 @@
 model Instructor {
   // Required
-  id                   String                         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt            DateTime                       @default(now())
-  updatedAt            DateTime                       @updatedAt
-  slug                 String                         @unique
-  name                 String
+  id                         String                         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                  DateTime                       @default(now())
+  updatedAt                  DateTime                       @updatedAt
+  slug                       String                         @unique
+  name                       String
   // Optional
-  headline             String?
-  facebookHandle       String?
-  instagramHandle      String?
-  linkedinHandle       String?
-  tiktokHandle         String?
-  youtubeHandle        String?
-  patreonHandle        String?
-  trackingSettings     InstructorTrackingSettings?
-  profileImageMedia    Media?                         @relation("InstructorProfileImage", fields: [profileImageMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
-  profileImageMediaId  String?                        @db.ObjectId
-  profileVideoMedia    Media?                         @relation("InstructorProfileVideo", fields: [profileVideoMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
-  profileVideoMediaId  String?                        @db.ObjectId
-  notificationSettings InstructorNotificationSettings
-  origin               SignupOrigin?
-  isDeleted            Boolean?
-  stripeSettings       InstructorStripeSettings?
-  theme                Theme?                         @relation(fields: [themeId], references: [id])
-  themeId              String?                        @unique @db.ObjectId
-  socialMediaLinks     SocialMediaLink?
-  onboardingProgress   OnboardingProgress?
-  crmProfileLink       String?
-  emailSettings        EmailSettings?
-  affiliateReferral    SaasAffiliateReferral?
-
+  headline                   String?
+  facebookHandle             String?
+  instagramHandle            String?
+  linkedinHandle             String?
+  tiktokHandle               String?
+  youtubeHandle              String?
+  patreonHandle              String?
+  trackingSettings           InstructorTrackingSettings?
+  profileImageMedia          Media?                         @relation("InstructorProfileImage", fields: [profileImageMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  profileImageMediaId        String?                        @db.ObjectId
+  profileVideoMedia          Media?                         @relation("InstructorProfileVideo", fields: [profileVideoMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  profileVideoMediaId        String?                        @db.ObjectId
+  notificationSettings       InstructorNotificationSettings
+  origin                     SignupOrigin?
+  isDeleted                  Boolean?
+  stripeSettings             InstructorStripeSettings?
+  theme                      Theme?                         @relation(fields: [themeId], references: [id])
+  themeId                    String?                        @unique @db.ObjectId
+  socialMediaLinks           SocialMediaLink?
+  onboardingProgress         OnboardingProgress?
+  crmProfileLink             String?
+  emailSettings              EmailSettings?
+  contentSettings            ContentSettings?
+  taxSettings                TaxSettings?
+  affiliateReferral          SaasAffiliateReferral?
   // Relations
   paymentLinks               PaymentLink[]
   contacts                   Contact[]
@@ -51,13 +52,38 @@ model Instructor {
   broadcasts                 Broadcast[]
   discountCodes              DiscountCode[]
   users                      User[]
-  transactions               Transaction[]
-  media                      Media[]                     @relation("InstructorMedia")
+  media                      Media[]                        @relation("InstructorMedia")
   courses                    Course[]
   membershipClubPosts        MembershipClubPost[]
   membershipClubPostComments MembershipClubPostComment[]
+  pages                      Page[]
+  reviews                    Review[]
+  contactBatchImports        ContactBatchImport[]
+  userAccesses               UserInstructorAccess[]
+  assistantTasks             AssistantTask[]
+  notifications              NotificationsInstructor[]
+  invoices                   Invoice[]
 
   @@map("instructors")
+}
+
+type TaxSettings {
+  taxStrategy        TaxStrategy
+  taxDisplayStrategy TaxDisplayStrategy
+}
+
+enum TaxStrategy {
+  NO_TAX
+  EU_UK_TAX
+}
+
+enum TaxDisplayStrategy {
+  SHOW_WITH_TAX
+  SHOW_WITHOUT_TAX
+}
+
+type ContentSettings {
+  allowDownloadAllMedia Boolean @default(false)
 }
 
 type EmailSettings {
@@ -65,7 +91,9 @@ type EmailSettings {
 }
 
 type InstructorTrackingSettings {
-  facebookPixelTrackingId String?
+  facebookPixelTrackingId   String?
+  facebookPurchaseEventName String?
+  facebookAccessToken       String?
 }
 
 type OnboardingProgress {

@@ -48,11 +48,16 @@ const findOneById = async (providerUser: User): Promise<AuthUser | null> => {
     select: {
       email: true,
       id: true,
-      affiliateId: true,
+      affiliate: {
+        select: {
+          id: true,
+          referralCode: true,
+        },
+      },
     },
   });
 
-  if (!user || !user.affiliateId) {
+  if (!user || !user.affiliate) {
     return null;
   }
 
@@ -60,6 +65,9 @@ const findOneById = async (providerUser: User): Promise<AuthUser | null> => {
     id: user.id,
     email: user.email,
     firstName: providerUser.firstName,
-    affiliateId: user.affiliateId,
+    affiliate: {
+      id: user.affiliate.id,
+      referralCode: user.affiliate.referralCode,
+    },
   };
 };

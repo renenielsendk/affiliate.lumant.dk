@@ -4,27 +4,30 @@ model Quiz {
   updatedAt       DateTime        @updatedAt
   title           String
   internalName    String
+  introduction    String?
   questions       QuizQuestion[]
   responses       QuizResponse[]
   instructorId    String          @db.ObjectId
   instructor      Instructor      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  lockAnswers     Boolean         @default(false)
   productLections CourseLection[]
 
   @@map("quizzes")
 }
 
 model QuizQuestion {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  type      QuestionType
-  quizId    String       @db.ObjectId
-  title     String
-  question  String
-  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  options   Json
-  answers   QuizAnswer[]
-  order     Int?
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  type        QuestionType
+  quizId      String       @db.ObjectId
+  title       String
+  question    String
+  explanation String?
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options     Json
+  answers     QuizAnswer[]
+  order       Int?
 
   @@map("quiz-questions")
 }
@@ -38,6 +41,7 @@ model QuizResponse {
   quizId    String       @db.ObjectId
   quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
   answers   QuizAnswer[]
+  completed Boolean      @default(false)
 
   @@map("quiz-responses")
 }
@@ -52,7 +56,7 @@ model QuizAnswer {
   response   QuizResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   // Answer Fields: Dynamically store user responses based on question type
-  optionId   String? @db.ObjectId // Selected option for multiple-choice
+  optionIds  String[]
   textAnswer String? // Text-based answer
   rating     Int? // Rating-based answer (e.g., 1-5)
 

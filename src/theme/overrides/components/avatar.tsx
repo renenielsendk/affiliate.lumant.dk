@@ -33,19 +33,19 @@ export function avatar(theme: Theme) {
       variants: COLORS.map((color) =>
         color === 'default'
           ? {
-            props: { color: 'default' },
-            style: {
-              color: theme.palette.text.secondary,
-              backgroundColor: alpha(theme.palette.grey[500], 0.24),
-            },
-          }
+              props: { color: 'default' },
+              style: {
+                color: theme.palette.text.secondary,
+                backgroundColor: alpha(theme.palette.grey[500], 0.24),
+              },
+            }
           : {
-            props: { color },
-            style: {
-              color: theme.palette[color].contrastText,
-              backgroundColor: theme.palette[color].main,
-            },
-          }
+              props: { color },
+              style: {
+                color: theme.palette[color].contrastText,
+                backgroundColor: theme.palette[color].main,
+              },
+            }
       ),
 
       styleOverrides: {
@@ -62,13 +62,13 @@ export function avatar(theme: Theme) {
             ...(!!ownerState.alt && {
               ...(color !== 'default'
                 ? {
-                  color: theme.palette[color].contrastText,
-                  backgroundColor: theme.palette[color].main,
-                }
+                    color: theme.palette[color].contrastText,
+                    backgroundColor: theme.palette[color].main,
+                  }
                 : {
-                  color: theme.palette.text.secondary,
-                  backgroundColor: alpha(theme.palette.grey[500], 0.24),
-                }),
+                    color: theme.palette.text.secondary,
+                    backgroundColor: alpha(theme.palette.grey[500], 0.24),
+                  }),
             }),
           };
         },
