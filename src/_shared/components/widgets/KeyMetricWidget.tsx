@@ -1,4 +1,4 @@
-import { Box, Card, CardProps, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, CardProps, CircularProgress, Typography } from '@mui/material';
 import { IconifyIcon } from '@/components/IconifyIcon';
 import { formatCurrency } from '@/utils/format-number';
 
@@ -43,20 +43,15 @@ export const KeyMetricWidget = ({ title, change, total, sx, isCurrency, isLoadin
   return (
     <Card
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        p: 3,
         ...sx,
       }}
       {...other}
     >
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography variant='h5'>{title}</Typography>
-        <Box sx={{ mt: 1.5, mb: 1, typography: 'h3' }}>
-          {isLoading ? <CircularProgress size={24} /> : renderNumber()}
-        </Box>
+      <CardHeader title={title} />
+      <CardContent sx={{ flexGrow: 1, pt: 1 }}>
+        <Box sx={{ mb: 1, typography: 'h3' }}>{isLoading ? <CircularProgress size={24} /> : renderNumber()}</Box>
         {renderTrending}
-      </Box>
+      </CardContent>
     </Card>
   );
 };

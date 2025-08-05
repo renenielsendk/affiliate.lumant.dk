@@ -28,6 +28,11 @@ const navLinks = [
         path: '/referrals/list',
         icon: 'mdi:share-all-outline',
       },
+      {
+        title: 'Transaktioner',
+        path: '/transactions/list',
+        icon: 'mdi:cash-multiple',
+      },
     ],
   },
 ];

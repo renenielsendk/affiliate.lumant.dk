@@ -7,6 +7,7 @@ model SaasAffiliate {
   referrals      SaasAffiliateReferral[]
   businessInfo   SaasAffiliateBusinessInfo
   agreementTerms SaasAffiliateAgreementTerms
+  transactions   SaasAffiliateTransaction[]
 
   @@map("saas-affiliates")
 }
@@ -52,11 +53,22 @@ enum SaasAffiliateReferralStatus {
 }
 
 model SaasAffiliateTransaction {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  amount    Int      @default(0)
-  text      String
+  id          String                         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime                       @default(now())
+  updatedAt   DateTime                       @updatedAt
+  paidAt      DateTime?                      @updatedAt
+  affiliateId String                         @unique @db.ObjectId
+  affiliate   SaasAffiliate                  @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grossAmount Int
+  netAmount   Int
+  text        String
+  status      SaasAffiliateTransactionStatus @default(PENDING)
 
   @@map("saas-affiliate-transactions")
+}
+
+enum SaasAffiliateTransactionStatus {
+  PENDING
+  AVAILABLE
+  PAID
 }

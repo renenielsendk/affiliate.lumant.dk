@@ -6,10 +6,6 @@ import { autocompleteClasses } from '@mui/material/Autocomplete';
 
 // ----------------------------------------------------------------------
 
-function getRadius(value: string | number, multiplier: number) {
-  return typeof value === 'number' ? value * multiplier : `calc(${value} * ${multiplier})`;
-}
-
 export const paper = ({ theme, bgcolor, dropdown }: { theme: Theme; bgcolor?: string; dropdown?: boolean }) => ({
   ...bgBlur({
     blur: 20,
@@ -28,7 +24,7 @@ export const paper = ({ theme, bgcolor, dropdown }: { theme: Theme; bgcolor?: st
   ...(dropdown && {
     padding: theme.spacing(0.5),
     boxShadow: theme.customShadows.dropdown,
-    borderRadius: getRadius(theme.shape.borderRadius, 1.25),
+    borderRadius: theme.shape.borderRadius * 1.25,
   }),
 });
 
@@ -37,7 +33,7 @@ export const paper = ({ theme, bgcolor, dropdown }: { theme: Theme; bgcolor?: st
 export const menuItem = (theme: Theme) => ({
   ...theme.typography.body2,
   padding: theme.spacing(0.75, 1),
-  borderRadius: getRadius(theme.shape.borderRadius, 0.75),
+  borderRadius: theme.shape.borderRadius * 0.75,
   '&:not(:last-of-type)': {
     marginBottom: 4,
   },

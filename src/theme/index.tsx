@@ -12,9 +12,10 @@ import { typography } from './typography';
 
 type Props = {
   children: React.ReactNode;
+  darkMode?: boolean;
 };
 
-export default function ThemeProvider({ children }: Props) {
+export default function ThemeProvider({ children, darkMode = true }: Props) {
   const memoizedValue = useMemo(
     () => ({
       palette: palette('dark'),

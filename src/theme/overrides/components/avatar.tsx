@@ -50,10 +50,7 @@ export function avatar(theme: Theme) {
 
       styleOverrides: {
         rounded: {
-          borderRadius:
-            typeof theme.shape.borderRadius === 'number'
-              ? theme.shape.borderRadius * 1.5
-              : `calc(${theme.shape.borderRadius} * 1.5)`,
+          borderRadius: theme.shape.borderRadius * 1.5,
         },
         colorDefault: ({ ownerState }: { ownerState: AvatarProps }) => {
           const color = colorByName(`${ownerState.alt}`);

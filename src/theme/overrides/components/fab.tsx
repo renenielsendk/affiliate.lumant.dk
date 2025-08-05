@@ -43,9 +43,6 @@ export function fab(theme: Theme) {
       },
       // FILLED
       ...((circularVariant || extendedVariant) && {
-        ...((defaultColor || inheritColor) && {
-          boxShadow: theme.customShadows.z8,
-        }),
         ...(inheritColor && {
           backgroundColor: theme.palette.text.primary,
           color: lightMode ? theme.palette.common.white : theme.palette.grey[800],

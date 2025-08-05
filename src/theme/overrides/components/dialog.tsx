@@ -9,10 +9,7 @@ export function dialog(theme: Theme) {
       styleOverrides: {
         paper: ({ ownerState }: { ownerState: DialogProps }) => ({
           boxShadow: theme.customShadows.dialog,
-          borderRadius:
-            typeof theme.shape.borderRadius === 'number'
-              ? theme.shape.borderRadius * 2
-              : `calc(${theme.shape.borderRadius} * 2)`,
+          borderRadius: theme.shape.borderRadius * 2,
           ...(!ownerState.fullScreen && {
             margin: theme.spacing(2),
           }),
