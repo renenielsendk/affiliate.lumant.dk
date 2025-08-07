@@ -1,20 +1,20 @@
 'use client';
 
+import { formatCurrency } from '@/utils/format-number';
 import { Box, Card, CardContent, CardProps, CircularProgress, Stack, Typography } from '@mui/material';
 import merge from 'lodash/merge';
-import { formatCurrency } from '@/utils/format-number';
-import { Chart, useChart } from '@/components/charts/Chart';
 import { IconifyIcon } from '../IconifyIcon';
+import { Chart, useChart } from '../charts/Chart';
 
 interface Props extends CardProps {
-  height?: number;
   title?: string;
+  subTitle?: string;
   chart: {
     labels: string[];
     stacked?: boolean;
     series: {
       name: string;
-      data: (number | null)[];
+      data: number[];
       fill?: string;
       type?: string;
     }[];
@@ -29,29 +29,31 @@ interface Props extends CardProps {
       min?: number;
       max?: number;
     };
+    forecastDataPoints?: {
+      count?: number;
+    };
   };
+  isLoading?: boolean;
   isCurrency?: boolean;
   isPercentage?: boolean;
   current: {
     title?: string;
     value: number;
   };
-  change?: {
-    value: number;
-    text: string;
-  };
-  isLoading?: boolean;
+  change?: number;
+  changeText?: string;
 }
 
-export const HorizontalChartWidget = ({
+export const RevenueChartWidget = ({
   title,
-  height = 250,
-  isCurrency = false,
+  subTitle,
+  isLoading = false,
+  isCurrency = true,
   isPercentage = false,
   chart,
   current,
   change,
-  isLoading = false,
+  changeText,
   ...other
 }: Props) => {
   const baseOptions = useChart();
@@ -76,7 +78,10 @@ export const HorizontalChartWidget = ({
       tickAmount: chart.yaxis?.ticker || undefined,
     },
     chart: {
-      stacked: chart.stacked || false,
+      stacked: chart.stacked ?? true,
+    },
+    forecastDataPoints: {
+      count: chart.forecastDataPoints?.count || 0,
     },
     tooltip: isCurrency
       ? {
@@ -94,19 +99,17 @@ export const HorizontalChartWidget = ({
       <IconifyIcon
         width={24}
         icon={
-          change && change.value < 0
-            ? 'solar:double-alt-arrow-down-bold-duotone'
-            : 'solar:double-alt-arrow-up-bold-duotone'
+          change && change < 0 ? 'solar:double-alt-arrow-down-bold-duotone' : 'solar:double-alt-arrow-up-bold-duotone'
         }
-        sx={{ flexShrink: 0, color: 'success.main', ...(change && change.value < 0 && { color: 'error.main' }) }}
+        sx={{ flexShrink: 0, color: 'success.main', ...(change && change < 0 && { color: 'error.main' }) }}
       />
 
       <Box component='span' sx={{ typography: 'subtitle2' }}>
-        {change && change.value > 0 && '+'}
-        {change && (isCurrency ? formatCurrency(change.value) : isPercentage ? change.value + '%' : change.value)}
+        {change && change > 0 && '+'}
+        {change && (isCurrency ? formatCurrency(change) : isPercentage ? change + '%' : change)}
       </Box>
       <Box component='span' sx={{ typography: 'body2', color: 'text.secondary' }}>
-        {change?.text || 'i dag'}
+        {changeText || 'i dag'}
       </Box>
     </Box>
   );
@@ -116,8 +119,13 @@ export const HorizontalChartWidget = ({
       <CardContent>
         <Stack direction='row' justifyContent='space-between' alignItems='center' mb={2}>
           <Typography variant='h6'>{title}</Typography>
-          {change && renderTrending}
+          {typeof change !== 'undefined' && renderTrending}
         </Stack>
+        {subTitle && (
+          <Typography variant='subtitle2' color='text.secondary' mb={2}>
+            {subTitle}
+          </Typography>
+        )}
         <Stack spacing={3} flexDirection='row' alignItems='center' justifyContent='space-between' gap={3}>
           <Stack flexDirection='column'>
             <Typography variant='h4'>{isCurrency ? formatCurrency(current.value) : current.value}</Typography>
@@ -127,7 +135,7 @@ export const HorizontalChartWidget = ({
           </Stack>
         </Stack>
 
-        {chart.series.length <= 0 && (
+        {!isLoading && chart.series.length <= 0 && (
           <Box
             sx={{
               display: 'flex',
@@ -143,12 +151,20 @@ export const HorizontalChartWidget = ({
             <Typography variant='body2'>Data not available.</Typography>
           </Box>
         )}
+
         {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: height }}>
-            <CircularProgress />
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 250,
+            }}
+          >
+            <CircularProgress size={20} color='inherit' />
           </Box>
         ) : (
-          <Chart type='line' series={chart.series} options={options} height={height} width={'100%'} />
+          <Chart type='line' series={chart.series} options={options} height={250} width={'100%'} />
         )}
       </CardContent>
     </Card>

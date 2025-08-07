@@ -5,8 +5,8 @@ import { ApexOptions } from 'apexcharts';
 import merge from 'lodash/merge';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
-import useResponsive from 'src/hooks/useResponsive';
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from '@/theme/css';
+import useResponsive from '@/hooks/use-responsive';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -20,10 +20,7 @@ export const Chart = memo(
         }),
         color: theme.palette.text.primary,
         boxShadow: theme.customShadows.dropdown,
-        borderRadius:
-          typeof theme.shape.borderRadius === 'number'
-            ? theme.shape.borderRadius * 1.25
-            : `calc(${theme.shape.borderRadius} * 1.25)`,
+        borderRadius: theme.shape.borderRadius * 1.25,
         '&.apexcharts-theme-light': {
           borderColor: 'transparent',
           ...bgBlur({
@@ -38,10 +35,7 @@ export const Chart = memo(
         borderColor: 'transparent',
         color: theme.palette.text.primary,
         boxShadow: theme.customShadows.dropdown,
-        borderRadius:
-          typeof theme.shape.borderRadius === 'number'
-            ? theme.shape.borderRadius * 1.25
-            : `calc(${theme.shape.borderRadius} * 1.25)`,
+        borderRadius: theme.shape.borderRadius * 1.25,
         '&:before': {
           borderBottomColor: alpha(theme.palette.grey[500], 0.24),
         },
@@ -185,7 +179,7 @@ export const useChart = (options?: ApexOptions) => {
 
     // Tooltip
     tooltip: {
-      theme: false,
+      theme: theme.palette.mode === 'light' ? 'light' : 'dark',
       x: {
         show: true,
       },

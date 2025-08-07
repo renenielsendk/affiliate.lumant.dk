@@ -51,6 +51,9 @@
       "@/hooks/*": [
         "src/_shared/hooks/*",
       ],
+      "@/theme/*": [
+        "src/theme/*",
+      ],
     }
   },
   "exclude": [

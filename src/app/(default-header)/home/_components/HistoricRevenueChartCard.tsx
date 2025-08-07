@@ -1,79 +1,74 @@
 import dayjs from 'dayjs';
-import { HorizontalChartWidget } from '@/components/widgets/HorizontalChartWidget';
+import { RevenueChartWidget } from '@/components/widgets/RevenueChartWidget';
 import { SaasAffiliateTransaction } from '@prisma/client';
 
 type Props = {
   transactions: SaasAffiliateTransaction[];
 };
 
-function getLastSixMonthsLabels() {
-  const labels: string[] = [];
-  const now = dayjs();
-  for (let i = 5; i >= 0; i--) {
-    labels.push(now.subtract(i, 'month').format('MMM YYYY'));
-  }
-  return labels;
-}
+export const HistoricRevenueChartCard = async ({ transactions }: Props) => {
+  // Show only last 6 months (including current)
+  const monthsBack = 5;
+  const currentDate = dayjs();
+  const startDate = currentDate.subtract(monthsBack, 'month').startOf('month');
+  const totalMonths = monthsBack + 1;
 
-function sumNetRevenueByMonth(transactions: SaasAffiliateTransaction[], months: string[]) {
-  const netSums = Array(months.length).fill(0);
+  // Prepare chart data
+  const data = {
+    labels: [] as string[],
+    newRevenue: [] as number[],
+  };
 
-  transactions.forEach((tx) => {
-    const d = dayjs(tx.paidAt ?? tx.createdAt);
-    const label = d.format('MMM YYYY');
-    const idx = months.indexOf(label);
-    if (idx !== -1) {
-      netSums[idx] += tx.netAmount;
-    }
+  // For each month in the range, calculate values
+  Array.from({ length: totalMonths }).forEach((_, index) => {
+    const date = startDate.add(index, 'month');
+    data.labels.push(date.format('MMM'));
+
+    // "New" revenue: paid or created in this month
+    const newRevenueForMonth = transactions
+      .filter(
+        (tx) =>
+          dayjs(tx.paidAt ?? tx.createdAt).isSame(date, 'month')
+      )
+      .reduce((acc, tx) => acc + (tx.netAmount || 0), 0);
+
+    data.newRevenue.push(Math.round(newRevenueForMonth));
   });
 
-  return netSums;
-}
-
-export const HistoricRevenueChartCard = async ({ transactions }: Props) => {
-  const labels = getLastSixMonthsLabels();
-
-  const netSums = sumNetRevenueByMonth(transactions, labels);
-
-  const totalNet = netSums.reduce((a, b) => a + b, 0);
-
+  // Calculate change for today
   const today = dayjs();
-  const todayNet = transactions
-    .filter((tx) => {
-      const paidOrCreated = tx.paidAt ? dayjs(tx.paidAt) : dayjs(tx.createdAt);
-      return paidOrCreated.isSame(today, 'day');
-    })
-    .reduce((sum, tx) => sum + tx.netAmount, 0);
+  const todayRevenue = transactions
+    .filter((tx) => dayjs(tx.paidAt ?? tx.createdAt).isSame(today, 'day'))
+    .reduce((sum, tx) => sum + (tx.netAmount || 0), 0);
+
+  // Calculate total revenue (sum of all newRevenue)
+  const totalRevenue = data.newRevenue.reduce((acc, val) => acc + (val || 0), 0);
 
   return (
-    <HorizontalChartWidget
-      title='Omsætning sidste 6 måneder'
+    <RevenueChartWidget
+      title="Omsætning"
       current={{
         title: 'Total',
-        value: totalNet,
+        value: totalRevenue,
       }}
-      change={{
-        value: todayNet,
-        text: 'i dag',
-      }}
+      change={todayRevenue}
+      changeText="i dag"
       chart={{
-        labels,
-        stacked: false,
+        labels: data.labels,
+        stacked: true,
         series: [
           {
-            name: 'Netto',
+            name: 'Ny',
             type: 'bar',
             fill: 'solid',
-            data: netSums,
+            data: data.newRevenue,
           },
         ],
-        xaxis: {
-          ticker: 4,
-        },
         yaxis: {
           ticker: 5,
         },
       }}
+      isLoading={false}
     />
   );
 };
