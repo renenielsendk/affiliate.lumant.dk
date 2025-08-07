@@ -10,7 +10,7 @@ import { Label } from '@/components/Label';
 import { SaasAffiliateReferralConversionType, SaasAffiliateReferralStatus } from '@prisma/client';
 
 const TABLE_HEAD = [
-  { id: 'createdAt', label: 'Tilmeldt', align: 'left' },
+  { id: 'createdAt', label: 'Dato', align: 'left' },
   { id: 'name', label: 'Navn', align: 'left' },
   { id: 'subscription', label: 'Produkt', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
@@ -38,7 +38,10 @@ export const ReferralsTable = ({ referrals }: Props) => {
                 </TableCell>
                 <TableCell align='left'>
                   <Typography color='white' variant='body2' fontWeight={700}>
-                    {referral.name}
+                    {referral.name || '(Intet navn)'}
+                  </Typography>
+                  <Typography fontSize={14} color='text.secondary'>
+                    {referral.email}
                   </Typography>
                 </TableCell>
                 <TableCell align='left'>

@@ -29,9 +29,11 @@ model SaasAffiliateReferral {
   createdAt      DateTime                            @default(now())
   updatedAt      DateTime                            @updatedAt
   convertedAt    DateTime?                           @updatedAt
-  trialExpiresAt DateTime?                           @updatedAt
-  instructorId   String                              @unique @db.ObjectId
-  instructor     Instructor                          @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  trialExpiresAt DateTime?
+  name           String?
+  email          String?
+  instructorId   String?                             @unique @db.ObjectId
+  instructor     Instructor?                         @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   affiliateId    String                              @unique @db.ObjectId
   affiliate      SaasAffiliate                       @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   status         SaasAffiliateReferralStatus         @default(TRIALING)

@@ -21,6 +21,8 @@ export const fetchReferrals = async (): Promise<ReferralListItem[]> => {
         conversionType: true,
         trialExpiresAt: true,
         convertedAt: true,
+        email: true,
+        name: true,
         instructor: {
           select: {
             businessInfo: true,
@@ -34,7 +36,8 @@ export const fetchReferrals = async (): Promise<ReferralListItem[]> => {
     .then((referrals) =>
       referrals.map((referral) => ({
         id: referral.id,
-        name: referral.instructor.businessInfo.name,
+        name: referral.name ?? referral.instructor?.businessInfo?.name ?? '',
+        email: referral.email ?? referral.instructor?.businessInfo?.contactEmail ?? '',
         status: referral.status,
         createdAt: referral.createdAt,
         conversionType: referral.conversionType,
