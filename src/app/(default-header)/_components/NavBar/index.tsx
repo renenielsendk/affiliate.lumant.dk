@@ -35,6 +35,16 @@ const navLinks = [
       },
     ],
   },
+  {
+    subheader: 'Support',
+    items: [
+      {
+        title: 'Ændringslog',
+        path: '/roadmap/changelog',
+        icon: 'mdi:history',
+      },
+    ],
+  },
 ];
 
 export const Navbar = () => {

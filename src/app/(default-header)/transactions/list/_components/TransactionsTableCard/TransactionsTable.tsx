@@ -73,11 +73,11 @@ export const TransactionsTable = ({ transactions }: Props) => {
                 </TableCell>
                 <TableCell align='left'>
                   {transaction.paidAt ? (
-                    <Typography fontSize={12} color='text.secondary'>
+                    <Typography color='white' variant='body2'>
                       {dayjs(transaction.paidAt).format('DD. MMM YYYY')}
                     </Typography>
                   ) : (
-                    <Typography fontSize={12} color='text.secondary'>
+                    <Typography color='white' variant='body2'>
                       -
                     </Typography>
                   )}
