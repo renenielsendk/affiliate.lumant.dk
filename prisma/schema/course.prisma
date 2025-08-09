@@ -40,8 +40,14 @@ model Course {
   enrollments            ProductEnrollment[]
   maxPurchases           Int?
   exemptFromTax          Boolean?                @default(false)
+  type                   ProductType             @default(DIGITAL_PRODUCT)
 
   @@map("courses")
+}
+
+enum ProductType {
+  DIGITAL_PRODUCT
+  ECOMMERCE_PRODUCT
 }
 
 enum CoursePublicationStatus {

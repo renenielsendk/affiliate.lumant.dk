@@ -33,6 +33,7 @@ model NotificationsUser {
 enum NotificationEmailStatus {
   NOT_DISPATCHED
   DISPATCHED
+  UNSUBSCRIBED
   FAILED
 }
 

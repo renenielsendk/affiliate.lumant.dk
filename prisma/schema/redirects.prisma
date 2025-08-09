@@ -1,0 +1,11 @@
+model Redirect {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+  fromUrl   String
+  toUrl     String
+  uses      Int      @default(0)
+
+  @@map("redirects")
+}

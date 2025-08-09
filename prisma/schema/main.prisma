@@ -34,7 +34,8 @@ type CheckoutSettings {
 }
 
 type ReceiptSettings {
-  emailBody        String?
-  emailSubject     String?
-  thankYouPageText String?
+  emailBody          String?
+  emailSubject       String?
+  thankYouPageText   String?
+  extraAttachmentIds String[]
 }

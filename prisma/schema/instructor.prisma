@@ -63,6 +63,8 @@ model Instructor {
   assistantTasks             AssistantTask[]
   notifications              NotificationsInstructor[]
   invoices                   Invoice[]
+  // temp
+  paymentsMigrated           Boolean                        @default(true)
 
   @@map("instructors")
 }

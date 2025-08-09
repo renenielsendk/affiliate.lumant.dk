@@ -6,10 +6,18 @@ model SaasAffiliate {
   users          User[]
   referrals      SaasAffiliateReferral[]
   businessInfo   SaasAffiliateBusinessInfo
+  contactInfo    SaasAffiliateContactInfo
   agreementTerms SaasAffiliateAgreementTerms
+  status         SaasAffiliateStatus         @default(PENDING)
   transactions   SaasAffiliateTransaction[]
 
   @@map("saas-affiliates")
+}
+
+enum SaasAffiliateStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 type SaasAffiliateAgreementTerms {
@@ -18,10 +26,16 @@ type SaasAffiliateAgreementTerms {
   trialPeriodDays       Int
 }
 
-type SaasAffiliateBusinessInfo {
+type SaasAffiliateContactInfo {
   name         String
   contactEmail String
   contactPhone String
+}
+
+type SaasAffiliateBusinessInfo {
+  name    String
+  website String
+  vatNo   String
 }
 
 model SaasAffiliateReferral {
