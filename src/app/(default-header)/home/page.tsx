@@ -8,19 +8,24 @@ import { TotalConvertedReferralsCard } from './_components/TotalConvertedReferra
 import { TotalTrialsReferralsCard } from './_components/TotalTrialsReferralsCard';
 import { HistoricRevenueChartCard } from './_components/HistoricRevenueChartCard';
 import { TotalRevenueReferralsCard } from './_components/TotalRevenueReferralsCard';
+import { fetchAffiliate } from './_services/fetch-affiliate';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   initializeLogger({ name: 'page:/home' });
 
-  const [referrals, transactions] = await Promise.all([fetchReferrals(), fetchTransactions()]);
+  const [affiliate, referrals, transactions] = await Promise.all([
+    fetchAffiliate(),
+    fetchReferrals(),
+    fetchTransactions(),
+  ]);
 
   return (
     <Container>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12 }}>
-          <ReferralsQuickActionsCard />
+          <ReferralsQuickActionsCard businessName={affiliate.businessInfo.name} />
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <TotalConvertedReferralsCard referrals={referrals} />
