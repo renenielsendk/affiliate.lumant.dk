@@ -67,8 +67,8 @@ export const HorizontalChartWidget = ({
         formatter:
           chart.yaxis?.labels?.formatter || isCurrency
             ? (val: any) => {
-              return formatCurrency(val);
-            }
+                return formatCurrency(val);
+              }
             : undefined,
       },
       min: chart.yaxis?.min || undefined,
@@ -80,12 +80,12 @@ export const HorizontalChartWidget = ({
     },
     tooltip: isCurrency
       ? {
-        y: {
-          formatter: (val: any) => {
-            return formatCurrency(val);
+          y: {
+            formatter: (val: any) => {
+              return formatCurrency(val);
+            },
           },
-        },
-      }
+        }
       : undefined,
   });
 

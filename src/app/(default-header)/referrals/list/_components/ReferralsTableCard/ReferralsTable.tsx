@@ -63,12 +63,18 @@ export const ReferralsTable = ({ referrals }: Props) => {
                     {referral.status === SaasAffiliateReferralStatus.INVITED && 'Inviteret'}
                     {referral.status === SaasAffiliateReferralStatus.TRIALING && 'Prøveperiode'}
                     {referral.status === SaasAffiliateReferralStatus.CONVERTED && 'Konverteret'}
+                    {referral.status === SaasAffiliateReferralStatus.MEETING_BOOKED && 'Møde booket'}
                   </Label>
-                  {referral.status === SaasAffiliateReferralStatus.TRIALING && referral.trialExpiresAt && (
-                    <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
-                      Udløber om {dayjs(referral.trialExpiresAt).diff(dayjs(), 'day')} dage
-                    </Typography>
-                  )}
+                  {referral.status === SaasAffiliateReferralStatus.TRIALING &&
+                    referral.trialExpiresAt &&
+                    (() => {
+                      const days = dayjs(referral.trialExpiresAt).diff(dayjs(), 'day');
+                      return (
+                        <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
+                          {days >= 0 ? `Udløber om ${days} dage` : 'Udløbet'}
+                        </Typography>
+                      );
+                    })()}
                   {referral.status === SaasAffiliateReferralStatus.CONVERTED && (
                     <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
                       {dayjs(referral.convertedAt).format('MMM DD, YYYY')}

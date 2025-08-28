@@ -15,10 +15,10 @@ function getLastSixMonthsLabels() {
   return labels;
 }
 
-function countByMonth(referrals: ReferralListItem[], dateKey: 'createdAt' | 'convertedAt', months: string[]) {
+function countByMonthConverted(referrals: ReferralListItem[], months: string[]) {
   const counts = Array(months.length).fill(0);
   referrals.forEach((ref) => {
-    const date = ref[dateKey];
+    const date = ref.convertedAt;
     if (!date) return;
     const d = dayjs(date);
     const label = d.format('MMM YYYY');
@@ -33,23 +33,20 @@ function countByMonth(referrals: ReferralListItem[], dateKey: 'createdAt' | 'con
 export const HistoricReferralsChartCard = async ({ referrals }: Props) => {
   const labels = getLastSixMonthsLabels();
 
-  const createdCounts = countByMonth(referrals, 'createdAt', labels);
-  const convertedCounts = countByMonth(referrals, 'convertedAt', labels);
+  const convertedCounts = countByMonthConverted(referrals, labels);
 
-  const totalCreated = createdCounts.reduce((a, b) => a + b, 0);
   const totalConverted = convertedCounts.reduce((a, b) => a + b, 0);
 
-  // Calculate change for today (created and converted)
+  // Calculate change for today (converted only)
   const today = dayjs();
-  const createdToday = referrals.filter((r) => dayjs(r.createdAt).isSame(today, 'day')).length;
   const convertedToday = referrals.filter((r) => r.convertedAt && dayjs(r.convertedAt).isSame(today, 'day')).length;
 
   return (
     <HorizontalChartWidget
-      title='Henvisninger sidste 6 måneder'
+      title='Konverteringer sidste 6 måneder'
       current={{
         title: 'Total',
-        value: totalCreated,
+        value: totalConverted,
       }}
       change={{
         value: convertedToday,
@@ -59,12 +56,6 @@ export const HistoricReferralsChartCard = async ({ referrals }: Props) => {
         labels,
         stacked: true,
         series: [
-          {
-            name: 'Tilmeldt',
-            type: 'bar',
-            fill: 'solid',
-            data: createdCounts,
-          },
           {
             name: 'Konverteret',
             type: 'bar',

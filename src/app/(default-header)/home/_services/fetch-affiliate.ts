@@ -9,12 +9,11 @@ export const fetchAffiliate = async (): Promise<SaasAffiliate> => {
   const logger = createChildLogger({ trace: 'fetchAffiliate' });
   const user = await validateAuth();
 
-  const affiliate = await dbClient.saasAffiliate
-    .findFirst({
-      where: {
-        id: user.affiliate.id,
-      },
-    });
+  const affiliate = await dbClient.saasAffiliate.findFirst({
+    where: {
+      id: user.affiliate.id,
+    },
+  });
 
   if (!affiliate) {
     logger.error({ trace: 'fetchAffiliate' }, 'Affiliate not found');

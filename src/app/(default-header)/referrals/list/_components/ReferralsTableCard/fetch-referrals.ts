@@ -9,6 +9,8 @@ export const fetchReferrals = async (): Promise<ReferralListItem[]> => {
   createChildLogger({ trace: 'fetchReferrals' });
   const user = await validateAuth();
 
+  console.log(user.affiliate.id);
+
   return await dbClient.saasAffiliateReferral
     .findMany({
       where: {

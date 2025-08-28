@@ -13,7 +13,9 @@ export const CopyBookDemoPageButton = ({ businessName }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleCopy = async () => {
-    const url = `https://calendly.com/lumant-dk/gratis-30-minutters-demo-mode?a3=${encodeURIComponent(`Henvist via ${businessName}`)}`;
+    const url = `https://calendly.com/lumant-dk/gratis-30-minutters-demo-mode?a3=${encodeURIComponent(
+      `Henvist via ${businessName}`
+    )}`;
     try {
       await navigator.clipboard.writeText(url);
       enqueueSnackbar('Link kopieret', { variant: 'success' });

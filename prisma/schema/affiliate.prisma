@@ -39,19 +39,20 @@ type SaasAffiliateBusinessInfo {
 }
 
 model SaasAffiliateReferral {
-  id             String                              @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime                            @default(now())
-  updatedAt      DateTime                            @updatedAt
-  convertedAt    DateTime?                           @updatedAt
-  trialExpiresAt DateTime?
-  name           String?
-  email          String?
-  instructorId   String?                             @unique @db.ObjectId
-  instructor     Instructor?                         @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  affiliateId    String                              @unique @db.ObjectId
-  affiliate      SaasAffiliate                       @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  status         SaasAffiliateReferralStatus         @default(TRIALING)
-  conversionType SaasAffiliateReferralConversionType @default(NOT_CONVERTED)
+  id              String                              @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime                            @default(now())
+  updatedAt       DateTime                            @updatedAt
+  convertedAt     DateTime?                           @updatedAt
+  trialExpiresAt  DateTime?
+  meetingBookedAt DateTime?
+  name            String?
+  email           String?
+  instructorId    String?                             @unique @db.ObjectId
+  instructor      Instructor?                         @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  affiliateId     String                              @unique @db.ObjectId
+  affiliate       SaasAffiliate                       @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status          SaasAffiliateReferralStatus         @default(TRIALING)
+  conversionType  SaasAffiliateReferralConversionType @default(NOT_CONVERTED)
 
   @@map("saas-affiliate-referrals")
 }
@@ -63,6 +64,7 @@ enum SaasAffiliateReferralConversionType {
 }
 
 enum SaasAffiliateReferralStatus {
+  MEETING_BOOKED
   INVITED
   TRIALING
   CONVERTED

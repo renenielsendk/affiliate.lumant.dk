@@ -21,6 +21,7 @@ export const fetchReferrals = async (): Promise<ReferralListItem[]> => {
         conversionType: true,
         trialExpiresAt: true,
         convertedAt: true,
+        meetingBookedAt: true,
         instructor: {
           select: {
             businessInfo: true,
@@ -39,6 +40,7 @@ export const fetchReferrals = async (): Promise<ReferralListItem[]> => {
         conversionType: referral.conversionType,
         trialExpiresAt: referral.trialExpiresAt,
         convertedAt: referral.convertedAt,
+        meetingBookedAt: referral.meetingBookedAt,
       }))
     );
 };

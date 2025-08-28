@@ -26,10 +26,7 @@ export const HistoricRevenueChartCard = async ({ transactions }: Props) => {
 
     // "New" revenue: paid or created in this month
     const newRevenueForMonth = transactions
-      .filter(
-        (tx) =>
-          dayjs(tx.paidAt ?? tx.createdAt).isSame(date, 'month')
-      )
+      .filter((tx) => dayjs(tx.paidAt ?? tx.createdAt).isSame(date, 'month'))
       .reduce((acc, tx) => acc + (tx.netAmount || 0), 0);
 
     data.newRevenue.push(Math.round(newRevenueForMonth));
@@ -46,13 +43,13 @@ export const HistoricRevenueChartCard = async ({ transactions }: Props) => {
 
   return (
     <RevenueChartWidget
-      title="Omsætning"
+      title='Omsætning'
       current={{
         title: 'Total',
         value: totalRevenue,
       }}
       change={todayRevenue}
-      changeText="i dag"
+      changeText='i dag'
       chart={{
         labels: data.labels,
         stacked: true,

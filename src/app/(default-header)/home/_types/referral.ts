@@ -4,5 +4,6 @@ export type ReferralListItem = {
   status: string;
   conversionType: string;
   trialExpiresAt: Date | null;
+  meetingBookedAt: Date | null;
   convertedAt: Date | null;
 };
