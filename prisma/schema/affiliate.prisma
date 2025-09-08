@@ -80,13 +80,12 @@ model SaasAffiliateTransaction {
   grossAmount Int
   netAmount   Int
   text        String
-  status      SaasAffiliateTransactionStatus @default(PENDING)
+  status      SaasAffiliateTransactionStatus @default(AVAILABLE)
 
   @@map("saas-affiliate-transactions")
 }
 
 enum SaasAffiliateTransactionStatus {
-  PENDING
   AVAILABLE
   PAID
 }

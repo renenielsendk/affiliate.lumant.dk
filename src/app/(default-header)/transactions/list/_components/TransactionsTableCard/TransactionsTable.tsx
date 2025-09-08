@@ -21,6 +21,39 @@ type Props = {
   transactions: SaasAffiliateTransaction[];
 };
 
+function isPending(transaction: SaasAffiliateTransaction) {
+  // Only AVAILABLE can be pending, and only if not 14 days old
+  if (transaction.status !== SaasAffiliateTransactionStatus.AVAILABLE) return false;
+  const daysSinceCreated = dayjs().diff(dayjs(transaction.createdAt), 'day');
+  return daysSinceCreated < 14;
+}
+
+function getStatusLabel(transaction: SaasAffiliateTransaction) {
+  if (transaction.status === SaasAffiliateTransactionStatus.PAID) {
+    return 'Udbetalt';
+  }
+  if (transaction.status === SaasAffiliateTransactionStatus.AVAILABLE) {
+    if (isPending(transaction)) {
+      return 'Afventer';
+    }
+    return 'Tilgængelig';
+  }
+  return '';
+}
+
+function getStatusColor(transaction: SaasAffiliateTransaction) {
+  if (transaction.status === SaasAffiliateTransactionStatus.PAID) {
+    return 'success';
+  }
+  if (transaction.status === SaasAffiliateTransactionStatus.AVAILABLE) {
+    if (isPending(transaction)) {
+      return 'error';
+    }
+    return 'warning';
+  }
+  return 'default';
+}
+
 export const TransactionsTable = ({ transactions }: Props) => {
   const { page, onChangePage, rowsPerPage } = useTable({ defaultRowsPerPage: 20 });
 
@@ -30,60 +63,61 @@ export const TransactionsTable = ({ transactions }: Props) => {
         <TableContainerCustom>
           <TableHeadCustom headLabel={TABLE_HEAD} />
           <TableBody>
-            {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction, index) => (
-              <TableRow key={transaction.id || index}>
-                <TableCell align='left'>
-                  <Typography color='white' variant='body2' fontWeight={700}>
-                    {dayjs(transaction.createdAt).format('DD. MMM YYYY')}
-                  </Typography>
-                </TableCell>
-                <TableCell align='left'>
-                  <Typography color='white' variant='body2'>
-                    {transaction.text}
-                  </Typography>
-                </TableCell>
-                <TableCell align='left'>
-                  <Typography color='white' variant='body2' fontWeight={700}>
-                    {formatCurrency(transaction.netAmount)}
-                  </Typography>
-                </TableCell>
-                <TableCell align='left'>
-                  <Label
-                    variant='ghost'
-                    color={getStatusColor(transaction.status)}
-                    sx={{ textTransform: 'capitalize' }}
-                  >
-                    {transaction.status === SaasAffiliateTransactionStatus.PAID && 'Udbetalt'}
-                    {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && 'Tilgængelig'}
-                    {transaction.status === SaasAffiliateTransactionStatus.PENDING && 'Afventer'}
-                  </Label>
-                  {transaction.status === SaasAffiliateTransactionStatus.PENDING && (
-                    <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
-                      {`Kan udbetales om ${Math.max(
-                        0,
-                        dayjs(transaction.createdAt).add(14, 'day').diff(dayjs(), 'day')
-                      )} dage`}
+            {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction, index) => {
+              const pending = isPending(transaction);
+              return (
+                <TableRow key={transaction.id || index}>
+                  <TableCell align='left'>
+                    <Typography color='white' variant='body2' fontWeight={700}>
+                      {dayjs(transaction.createdAt).format('DD. MMM YYYY')}
                     </Typography>
-                  )}
-                  {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && (
-                    <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
-                      Kan udbetales nu
-                    </Typography>
-                  )}
-                </TableCell>
-                <TableCell align='left'>
-                  {transaction.paidAt ? (
+                  </TableCell>
+                  <TableCell align='left'>
                     <Typography color='white' variant='body2'>
-                      {dayjs(transaction.paidAt).format('DD. MMM YYYY')}
+                      {transaction.text}
                     </Typography>
-                  ) : (
-                    <Typography color='white' variant='body2'>
-                      -
+                  </TableCell>
+                  <TableCell align='left'>
+                    <Typography color='white' variant='body2' fontWeight={700}>
+                      {formatCurrency(transaction.netAmount)}
                     </Typography>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell align='left'>
+                    <Label
+                      variant='ghost'
+                      color={getStatusColor(transaction)}
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {getStatusLabel(transaction)}
+                    </Label>
+                    {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && pending && (
+                      <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
+                        {`Kan udbetales om ${Math.max(
+                          0,
+                          14 - dayjs().diff(dayjs(transaction.createdAt), 'day')
+                        )} dage`}
+                      </Typography>
+                    )}
+                    {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && !pending && (
+                      <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
+                        Kan udbetales nu
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell align='left'>
+                    {transaction.paidAt ? (
+                      <Typography color='white' variant='body2'>
+                        {dayjs(transaction.paidAt).format('DD. MMM YYYY')}
+                      </Typography>
+                    ) : (
+                      <Typography color='white' variant='body2'>
+                        -
+                      </Typography>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </TableContainerCustom>
         <Box sx={{ position: 'relative' }}>
@@ -102,15 +136,4 @@ export const TransactionsTable = ({ transactions }: Props) => {
       </Card>
     </Stack>
   );
-};
-
-const getStatusColor = (status: SaasAffiliateTransactionStatus) => {
-  switch (status) {
-    case SaasAffiliateTransactionStatus.PAID:
-      return 'success';
-    case SaasAffiliateTransactionStatus.AVAILABLE:
-      return 'warning';
-    case SaasAffiliateTransactionStatus.PENDING:
-      return 'error';
-  }
 };
