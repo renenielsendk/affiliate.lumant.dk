@@ -1,40 +1,51 @@
 model ProductPrice {
   // Required
-  id                         String                                @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                  DateTime                              @default(now())
-  updatedAt                  DateTime                              @updatedAt
-  internalName               String
-  name                       String
-  type                       ProductPriceType                      @default(ONE_TIME)
-  priceWithoutTax            Float
-  currency                   String                                @default("DKK")
-  reference                  String
-  isActive                   Boolean                               @default(true)
-  accessType                 ProductPriceAccessType                @default(PUBLIC)
+  id                       String                                @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                DateTime                              @default(now())
+  updatedAt                DateTime                              @updatedAt
+  internalName             String
+  name                     String
+  type                     ProductPriceType                      @default(ONE_TIME)
+  priceWithoutTax          Float
+  currency                 String                                @default("DKK")
+  reference                String
+  isActive                 Boolean                               @default(true)
+  accessType               ProductPriceAccessType                @default(PUBLIC)
   // Optional
-  membershipClub             MembershipClub?                       @relation(fields: [membershipClubId], references: [id])
-  membershipClubId           String?                               @db.ObjectId
-  product                    Course?                               @relation(fields: [productId], references: [id])
-  productId                  String?                               @db.ObjectId
-  installmentSettings InstallmentSettings?
-  subscriptionIntervalUnit   ProductPriceSubscriptionIntervalUnit?
-  subscriptionTrialDays      Int?
-  order                      Int?
-  couponCode                 String?
-  maxUses                    Int?
+  membershipClub           MembershipClub?                       @relation(fields: [membershipClubId], references: [id])
+  membershipClubId         String?                               @db.ObjectId
+  product                  Course?                               @relation(fields: [productId], references: [id])
+  productId                String?                               @db.ObjectId
+  installmentSettings      InstallmentSettings?
+  subscriptionSettings     SubscriptionSettings?
+  subscriptionIntervalUnit ProductPriceSubscriptionIntervalUnit?
+  order                    Int?
+  couponCode               String?
+  maxUses                  Int?
   // Relations
-  subscriptions              Subscription[]
-  payments                   Payment[]
+  subscriptions            Subscription[]
+  payments                 Payment[]
 
   @@map("product-prices")
 }
 
+type SubscriptionSettings {
+  trialEndDate DateTime?
+  trialType    ProductPriceSubscriptionTrialType?
+  trialDays    Int?
+}
+
+enum ProductPriceSubscriptionTrialType {
+  DAYS
+  ON_DATE
+}
+
 type InstallmentSettings {
   totalInstallments Int?
-  priceWithoutTax Float?
-  interval Int?
-  intervalUnit ProductPriceInstallmentIntervalUnit?
-  firstPaymentDate DateTime?
+  priceWithoutTax   Float?
+  interval          Int?
+  intervalUnit      ProductPriceInstallmentIntervalUnit?
+  firstPaymentDate  DateTime?
 }
 
 enum ProductPriceSubscriptionIntervalUnit {

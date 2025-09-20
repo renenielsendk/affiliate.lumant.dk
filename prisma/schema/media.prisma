@@ -24,6 +24,7 @@ model Media {
   membershipClubBanners      MembershipClub[]            @relation("MembershipClubBannerMedia")
   reviewVideos               Review[]                    @relation("ReviewVideo")
   reviewImages               Review[]                    @relation("ReviewImage")
+  membershipClubImages       MembershipClub[]            @relation("MembershipClubImageMedia")
 
   @@map("media")
 }

@@ -15,6 +15,7 @@ model Payment {
   charges        PaymentCharge[]
   customFields   PaymentCustomField[]
   reference      String
+  quantity       Int                  @default(1)
 
   @@map("payments")
 }
@@ -44,13 +45,14 @@ model PaymentCharge {
   type                PaymentChargeType
   reference           String
   collectionAttempts  Int                  @default(0)
+  installmentTriedAt  DateTime?
   // Optional
   refundReason        String?
   refundedAt          DateTime?
   installmentNumber   Int?
   paymentOrigin       PaymentChargeOrigin?
   paymentIntentId     String?
-  invoices            Invoice[]
+  invoices            Invoice?
 
   @@map("payment-charges")
 }

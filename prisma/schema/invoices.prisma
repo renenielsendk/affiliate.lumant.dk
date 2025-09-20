@@ -7,7 +7,7 @@ model Invoice {
   instructor      Instructor    @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   instructorId    String        @db.ObjectId
   paymentCharge   PaymentCharge @relation(fields: [paymentChargeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  paymentChargeId String        @db.ObjectId
+  paymentChargeId String        @unique @db.ObjectId
   reference       String
   invoiceNumber   Int
   netAmount       Float

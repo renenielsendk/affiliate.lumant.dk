@@ -3,15 +3,21 @@ model Automation {
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
   name          String
-  createdBy     String // The customer who created it
   steps         AutomationStep[]
   instructor    Instructor               @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   instructorId  String                   @db.ObjectId
   subscriptions AutomationSubscription[]
   triggers      AutomationTrigger[]
   isActive      Boolean                  @default(true)
+  template      AutomationTemplate?
 
   @@map("automations")
+}
+
+enum AutomationTemplate {
+  FREEBIE_BOOK_MEETING_FLOW
+  FREEBIE_PRODUCT_SALES_FLOW
+  EMPTY
 }
 
 model AutomationTrigger {

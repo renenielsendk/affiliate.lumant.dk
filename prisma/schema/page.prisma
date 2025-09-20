@@ -23,5 +23,6 @@ type MetaData {
 
 enum PageTemplate {
   EMPTY
-  FREEBIE_V1
+  ESSENS_PRODUCT_SALES_PAGE_V1
+  ESSENS_FREEBIE_V1
 }

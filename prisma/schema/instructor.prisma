@@ -31,6 +31,7 @@ model Instructor {
   contentSettings            ContentSettings?
   taxSettings                TaxSettings?
   affiliateReferral          SaasAffiliateReferral?
+  onboardingAnswers          OnboardingAnswers?
   // Relations
   paymentLinks               PaymentLink[]
   contacts                   Contact[]
@@ -63,10 +64,13 @@ model Instructor {
   assistantTasks             AssistantTask[]
   notifications              NotificationsInstructor[]
   invoices                   Invoice[]
-  // temp
-  paymentsMigrated           Boolean                        @default(true)
+  integrationApps            IntegrationApp[]
 
   @@map("instructors")
+}
+
+type OnboardingAnswers {
+  previousPlatform String?
 }
 
 type TaxSettings {

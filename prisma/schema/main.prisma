@@ -11,9 +11,10 @@ generator client {
 }
 
 type SignupOrigin {
-  campaign String?
-  source   String?
-  medium   String?
+  conversionUrl String?
+  campaign      String?
+  source        String?
+  medium        String?
 }
 
 type CheckoutCustomField {
@@ -34,8 +35,8 @@ type CheckoutSettings {
 }
 
 type ReceiptSettings {
-  emailBody          String?
-  emailSubject       String?
-  thankYouPageText   String?
-  extraAttachmentIds String[]
+  emailBody        String?
+  emailSubject     String?
+  thankYouPageText String?
+  attachmentIds    String[]
 }

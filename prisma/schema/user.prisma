@@ -17,6 +17,8 @@ model User {
   avatarMediaUrl             String?                     @db.ObjectId
   affiliate                  SaasAffiliate?              @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   affiliateId                String?                     @db.ObjectId
+  saasAdminUser              SaaSAdminUser?              @relation(fields: [saasAdminUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  saasAdminUserId            String?                     @unique @db.ObjectId
   // Relations
   courses                    CourseEnrollment[]
   contactEntries             Contact[]

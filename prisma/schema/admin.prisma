@@ -1,0 +1,22 @@
+model SaaSAdminUser {
+  id          String                    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  user        User?
+  permissions SaaSAdminUserPermission[]
+
+  @@map("saas-admin-users")
+}
+
+enum SaaSAdminUserPermission {
+  VIEW_SUBSCRIPTION_DATA
+  VIEW_INSTRUCTOR_DATA
+  VIEW_CONTENT_DATA
+  VIEW_ADVERTISING_DATA
+  VIEW_END_USER_DATA
+  WRITE_SUBSCRIPTION_DATA
+  WRITE_INSTRUCTOR_DATA
+  VIEW_AFFILIATE_DATA
+  VIEW_KEY_ACCOUNT_MANAGER_DATA
+  VIEW_ALL_DATA
+}

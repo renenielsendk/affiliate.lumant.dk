@@ -4,6 +4,8 @@ model MembershipClub {
   updatedAt            DateTime                    @updatedAt
   instructor           Instructor                  @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   instructorId         String                      @db.ObjectId
+  imageMedia           Media?                      @relation("MembershipClubImageMedia", fields: [imageMediaId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  imageMediaId         String?                     @db.ObjectId
   name                 String
   tagLine              String?
   status               MembershipClubStatus        @default(ACTIVE)
