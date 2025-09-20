@@ -10,6 +10,7 @@ model SaasAffiliate {
   agreementTerms SaasAffiliateAgreementTerms
   status         SaasAffiliateStatus         @default(PENDING)
   transactions   SaasAffiliateTransaction[]
+  referralLinks  SaasAffiliateReferralLink[]
 
   @@map("saas-affiliates")
 }
@@ -36,6 +37,17 @@ type SaasAffiliateBusinessInfo {
   name    String
   website String
   vatNo   String
+}
+
+model SaasAffiliateReferralLink {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  referralCode String        @unique
+  affiliateId  String        @unique @db.ObjectId
+  affiliate    SaasAffiliate @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("saas-affiliate-referral-links")
 }
 
 model SaasAffiliateReferral {

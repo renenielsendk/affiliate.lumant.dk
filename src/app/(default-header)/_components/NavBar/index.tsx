@@ -24,9 +24,19 @@ const navLinks = [
         icon: 'mdi:monitor-dashboard',
       },
       {
-        title: 'Henvisninger',
-        path: '/referrals/list',
+        title: 'Del og tjen',
+        path: '/referrals',
         icon: 'mdi:share-all-outline',
+        children: [
+          {
+            title: 'Henvisningslinks',
+            path: '/referrals/links',
+          },
+          {
+            title: 'Henvisninger',
+            path: '/referrals/list',
+          },
+        ],
       },
       {
         title: 'Transaktioner',
