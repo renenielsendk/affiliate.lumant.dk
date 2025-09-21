@@ -83,19 +83,12 @@ export const TransactionsTable = ({ transactions }: Props) => {
                     </Typography>
                   </TableCell>
                   <TableCell align='left'>
-                    <Label
-                      variant='ghost'
-                      color={getStatusColor(transaction)}
-                      sx={{ textTransform: 'capitalize' }}
-                    >
+                    <Label variant='ghost' color={getStatusColor(transaction)} sx={{ textTransform: 'capitalize' }}>
                       {getStatusLabel(transaction)}
                     </Label>
                     {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && pending && (
                       <Typography fontSize={12} color='text.secondary' sx={{ mt: 0.5 }}>
-                        {`Kan udbetales om ${Math.max(
-                          0,
-                          14 - dayjs().diff(dayjs(transaction.createdAt), 'day')
-                        )} dage`}
+                        {`Kan udbetales om ${Math.max(0, 14 - dayjs().diff(dayjs(transaction.createdAt), 'day'))} dage`}
                       </Typography>
                     )}
                     {transaction.status === SaasAffiliateTransactionStatus.AVAILABLE && !pending && (

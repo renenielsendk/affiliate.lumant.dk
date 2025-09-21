@@ -43,6 +43,7 @@ model SaasAffiliateReferralLink {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  name         String
   referralCode String        @unique
   affiliateId  String        @unique @db.ObjectId
   affiliate    SaasAffiliate @relation(fields: [affiliateId], references: [id], onDelete: NoAction, onUpdate: NoAction)

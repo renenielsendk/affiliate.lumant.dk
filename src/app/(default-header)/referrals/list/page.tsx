@@ -1,4 +1,4 @@
-import { Button, Container, Stack } from '@mui/material';
+import { Button, Container, Link, Stack } from '@mui/material';
 import { initializeLogger } from '@/libs/logger';
 import { ReferralsTableCard } from './_components/ReferralsTableCard';
 import { PageTopBar } from '@/components/PageTopBar';
@@ -15,7 +15,9 @@ export default async function Page() {
         heading='Henvisninger'
         actions={
           <Stack direction='row' spacing={2}>
-            <CopySignupPageButton />
+            <Button variant='contained' color='primary' component={Link} href='/referrals/links'>
+              Opret henvisningslink
+            </Button>
             <Button disabled variant='contained'>
               Inviter (Kommer snart)
             </Button>
